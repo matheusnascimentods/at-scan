@@ -1,0 +1,7 @@
+{
+  "name": "at-scan",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ]
+}
