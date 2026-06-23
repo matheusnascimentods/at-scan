@@ -1,10 +1,13 @@
-<header class="w-full py-6 px-8 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+<header
+  class="w-full py-6 px-8 bg-[#003566] flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
   <div class="flex items-center gap-2">
     <span class="text-2xl font-bold text-[#003566] tracking-tight flex items-center gap-1.5">
-      <svg class="w-7 h-7 text-[#FFC300]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      <svg class="w-7 h-7 text-[#FFC300]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
-      AT<span class="text-[#FFC300]">Scan</span>
+      <span class="text-[#FFC300]">ATScan</span>
     </span>
   </div>
   <!-- No buttons or navigation in header as per reference -->
@@ -15,37 +18,38 @@
   <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
     <!-- Hero Left -->
     <div class="lg:col-span-7 flex flex-col items-start text-left gap-6">
-      <div class="inline-flex items-center gap-2 bg-blue-50 text-[#003566] px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+      <div
+        class="inline-flex items-center gap-2 bg-blue-50 text-[#003566] px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
         <span class="flex h-2 w-2 rounded-full bg-[#FFC300] animate-pulse"></span>
         Análise Gratuita e Ilimitada
       </div>
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
         Sua vaga. Seu currículo. <br>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#003566] to-[#00509d]">Sua pontuação ATS.</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#003566] to-[#00509d]">Sua pontuação
+          ATS.</span>
       </h1>
       <p class="text-lg text-slate-600 max-w-xl leading-relaxed">
-        Suba seu currículo em PDF e cole a descrição da vaga. Nossa inteligência artificial analisa a compatibilidade e ajuda você a otimizar seu perfil para vencer os filtros ATS dos recrutadores.
+        Suba seu currículo em PDF e cole a descrição da vaga. Nossa inteligência artificial analisa a compatibilidade e
+        ajuda você a otimizar seu perfil para vencer os filtros ATS dos recrutadores.
       </p>
-      <button 
-        (click)="navigateToAnalyzer()" 
-        class="mt-4 px-8 py-4 bg-[#003566] text-[#FFC300] hover:bg-[#002855] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 text-lg">
+      <button (click)="navigateToAnalyzer()"
+        class="mt-4 px-8 py-4 bg-[#FFC300] text-[#003566] hover:bg-[#FFC300] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 text-lg">
         Analisar meu currículo &rarr;
       </button>
     </div>
 
     <!-- Hero Right (Mock Card) -->
     <div class="lg:col-span-5 flex justify-center">
-      <div class="w-full max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl p-6 relative overflow-hidden transition-all duration-300 hover:shadow-3xl hover:border-slate-200">
-        <!-- Accent Line -->
-        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#003566] to-[#FFC300]"></div>
-        
+      <div
+        class="w-full max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl p-6 relative overflow-hidden transition-all duration-300 hover:shadow-3xl hover:border-slate-200">
         <div class="flex justify-between items-start mb-6 mt-2">
           <div>
             <h3 class="font-bold text-slate-800 text-lg">Compatibilidade ATS</h3>
             <p class="text-xs text-slate-400">Análise de Referência Estática</p>
           </div>
           <!-- Static Score -->
-          <div class="flex items-center justify-center w-16 h-16 rounded-full border-4 border-emerald-500 bg-emerald-50 shadow-inner">
+          <div
+            class="flex items-center justify-center w-16 h-16 rounded-full border-4 border-emerald-500 bg-emerald-50 shadow-inner">
             <span class="text-2xl font-black text-emerald-600">78</span>
           </div>
         </div>
@@ -83,21 +87,27 @@
 
         <!-- Keywords Chips -->
         <div class="border-t border-slate-100 pt-4">
-          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Keywords Encontradas & Ausentes</h4>
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Keywords Encontradas & Ausentes
+          </h4>
           <div class="flex flex-wrap gap-2">
-            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
+            <span
+              class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Python
             </span>
-            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
+            <span
+              class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Docker
             </span>
-            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
+            <span
+              class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Git
             </span>
-            <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-semibold rounded-lg border border-rose-100 flex items-center gap-1">
+            <span
+              class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-semibold rounded-lg border border-rose-100 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Kubernetes
             </span>
-            <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-semibold rounded-lg border border-rose-100 flex items-center gap-1">
+            <span
+              class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-semibold rounded-lg border border-rose-100 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Redis
             </span>
           </div>
@@ -110,46 +120,59 @@
   <section class="flex flex-col gap-8 border-t border-slate-100 pt-12 md:pt-16">
     <div class="text-center max-w-2xl mx-auto flex flex-col gap-3">
       <h2 class="text-3xl font-extrabold text-slate-900">Como funciona o scanner?</h2>
-      <p class="text-slate-500">Nossa inteligência artificial analisa seu currículo em três pilares fundamentais para garantir sua aprovação.</p>
+      <p class="text-slate-500">Nossa inteligência artificial analisa seu currículo em três pilares fundamentais para
+        garantir sua aprovação.</p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Feature Card 1 -->
-      <div class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
-        <div class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
+      <div
+        class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
+        <div
+          class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </div>
         <h3 class="font-bold text-slate-800 text-xl">Análise de Keywords</h3>
         <p class="text-sm text-slate-500 leading-relaxed">
-          Identifica termos técnicos, habilidades e jargões essenciais exigidos na descrição da vaga que estão ausentes no seu currículo.
+          Identifica termos técnicos, habilidades e jargões essenciais exigidos na descrição da vaga que estão ausentes
+          no seu currículo.
         </p>
       </div>
 
       <!-- Feature Card 2 -->
-      <div class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
-        <div class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
+      <div
+        class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
+        <div
+          class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+            </path>
           </svg>
         </div>
         <h3 class="font-bold text-slate-800 text-xl">Score por Seção</h3>
         <p class="text-sm text-slate-500 leading-relaxed">
-          Mede o peso de cada seção do seu currículo (experiência, habilidades, formação) garantindo a formatação adequada para leitura automatizada.
+          Mede o peso de cada seção do seu currículo (experiência, habilidades, formação) garantindo a formatação
+          adequada para leitura automatizada.
         </p>
       </div>
 
       <!-- Feature Card 3 -->
-      <div class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
-        <div class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
+      <div
+        class="feature-card bg-white p-8 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-200 flex flex-col items-start text-left gap-4">
+        <div
+          class="w-12 h-12 bg-blue-50 text-[#003566] rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
         </div>
         <h3 class="font-bold text-slate-800 text-xl">Otimização com IA</h3>
         <p class="text-sm text-slate-500 leading-relaxed">
-          Gere respostas contextuais para otimizar seu currículo de forma interativa sem inventar experiências fictícias.
+          Gere respostas contextuais para otimizar seu currículo de forma interativa sem inventar experiências
+          fictícias.
         </p>
       </div>
     </div>
