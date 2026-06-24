@@ -1,0 +1,178 @@
+@if (analyzeResult) {
+  <div class="flex flex-col gap-8 w-full max-w-5xl">
+    <!-- Two columns grid for Score and Feedback -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Panel: Score -->
+      <div class="md:col-span-5 bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col items-center text-center gap-6">
+        <h3 class="font-bold text-slate-800 text-lg">Compatibilidade ATS</h3>
+        
+        <!-- Score Circular Ring -->
+        <div 
+          [ngClass]="scoreRingColorClass"
+          class="flex items-center justify-center w-36 h-36 rounded-full border-8 bg-slate-50/50 shadow-inner transition-all duration-300"
+        >
+          <span [ngClass]="analyzeResult.score < 50 ? 'text-rose-600' : (analyzeResult.score < 75 ? 'text-amber-600' : 'text-emerald-600')" class="text-5xl font-black">{{ analyzeResult.score }}</span>
+        </div>
+        
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-bold text-slate-700">
+            @if (analyzeResult.score < 50) {
+              Pontuação Crítica
+            } @else if (analyzeResult.score < 75) {
+              Pontuação Regular
+            } @else {
+              Excelente Pontuação
+            }
+          </p>
+          <p class="text-xs text-slate-400">Seu currículo foi analisado com base nas especificações da vaga.</p>
+        </div>
+
+        <!-- Category Progress Bars -->
+        <div class="w-full space-y-4 pt-4 border-t border-slate-100">
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+              <span>Keywords Match</span>
+              <span>{{ analyzeResult.breakdown.keywordsScore }}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div 
+                [style.width.%]="analyzeResult.breakdown.keywordsScore" 
+                [ngClass]="analyzeResult.breakdown.keywordsScore < 50 ? 'bg-rose-500' : (analyzeResult.breakdown.keywordsScore < 75 ? 'bg-amber-500' : 'bg-emerald-500')" 
+                class="h-full rounded-full transition-all duration-500"
+              ></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+              <span>Semântica & Requisitos</span>
+              <span>{{ analyzeResult.breakdown.semanticScore }}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div 
+                [style.width.%]="analyzeResult.breakdown.semanticScore" 
+                [ngClass]="analyzeResult.breakdown.semanticScore < 50 ? 'bg-rose-500' : (analyzeResult.breakdown.semanticScore < 75 ? 'bg-amber-500' : 'bg-emerald-500')" 
+                class="h-full rounded-full transition-all duration-500"
+              ></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+              <span>Formatação & Estrutura</span>
+              <span>{{ analyzeResult.breakdown.formatScore }}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div 
+                [style.width.%]="analyzeResult.breakdown.formatScore" 
+                [ngClass]="analyzeResult.breakdown.formatScore < 50 ? 'bg-rose-500' : (analyzeResult.breakdown.formatScore < 75 ? 'bg-amber-500' : 'bg-emerald-500')" 
+                class="h-full rounded-full transition-all duration-500"
+              ></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+              <span>Peso por Seção</span>
+              <span>{{ analyzeResult.breakdown.sectionScore }}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div 
+                [style.width.%]="analyzeResult.breakdown.sectionScore" 
+                [ngClass]="analyzeResult.breakdown.sectionScore < 50 ? 'bg-rose-500' : (analyzeResult.breakdown.sectionScore < 75 ? 'bg-amber-500' : 'bg-emerald-500')" 
+                class="h-full rounded-full transition-all duration-500"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Feedback -->
+      <div class="md:col-span-7 flex flex-col gap-6 w-full">
+        <!-- Keywords Card -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col gap-4">
+          <h3 class="font-bold text-slate-800 text-lg">Mapeamento de Palavras-chave</h3>
+          
+          <div class="flex flex-col gap-3">
+            <div>
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Palavras-chave Encontradas</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (kw of analyzeResult.matchedKeywords; track kw) {
+                  <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-100 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ kw }}
+                  </span>
+                } @empty {
+                  <span class="text-xs text-slate-400 italic">Nenhuma palavra-chave encontrada.</span>
+                }
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Palavras-chave Ausentes</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (kw of analyzeResult.missingKeywords; track kw) {
+                  <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-semibold rounded-lg border border-rose-100 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> {{ kw }}
+                    <button class="hover:text-rose-900 font-bold text-[10px] shrink-0 cursor-pointer">+</button>
+                  </span>
+                } @empty {
+                  <span class="text-xs text-slate-400 italic">Nenhuma palavra-chave ausente.</span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Format Issues Card -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col gap-4">
+          <h3 class="font-bold text-slate-800 text-lg">Problemas de Formatação</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600">
+            @for (issue of analyzeResult.formatIssues; track issue) {
+              <li class="leading-relaxed">{{ issue }}</li>
+            } @empty {
+              <li class="text-emerald-600 font-semibold list-none flex items-center gap-1.5 -ml-5">
+                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Nenhum problema de formatação detectado!
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Section (Full width) -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col gap-4">
+      <h3 class="font-bold text-slate-800 text-lg">Recomendações de Melhoria</h3>
+      <div class="divide-y divide-slate-100">
+        @for (rec of analyzeResult.recommendations; track rec) {
+          <div class="py-4 flex justify-between items-center gap-4">
+            <div class="flex items-start gap-3 text-left">
+              <span [ngClass]="getPriorityColorClass(rec.priority)" class="px-2 py-0.5 text-[10px] font-bold rounded border uppercase shrink-0 mt-0.5">
+                {{ rec.priority }}
+              </span>
+              <p class="text-sm text-slate-700 leading-relaxed">{{ rec.text }}</p>
+            </div>
+            <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-100 shrink-0">
+              {{ rec.impact }}
+            </span>
+          </div>
+        } @empty {
+          <p class="text-sm text-slate-400 italic py-2">Nenhuma recomendação disponível.</p>
+        }
+      </div>
+    </div>
+
+    <!-- Optimize with AI CTA -->
+    <div class="flex justify-center pt-4">
+      <button 
+        (click)="onOptimizeClick()"
+        class="px-8 py-4 bg-[#003566] text-white hover:bg-[#003566]/90 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 text-lg cursor-pointer"
+      >
+        ✨ Otimizar meu currículo com IA
+      </button>
+    </div>
+  </div>
+}

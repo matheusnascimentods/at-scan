@@ -1,0 +1,53 @@
+<div class="flex flex-col gap-6 w-full max-w-3xl bg-white rounded-3xl border border-slate-100 shadow-2xl p-8 relative overflow-hidden transition-all duration-300 hover:shadow-3xl hover:border-slate-200">
+  <div class="flex flex-col gap-1.5">
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Descrição da Vaga</h2>
+    <p class="text-sm text-slate-500">Cole a descrição completa da vaga que deseja analisar.</p>
+  </div>
+
+  <textarea
+    [(ngModel)]="jobDescription"
+    placeholder="Cole os requisitos e atribuições da vaga aqui..."
+    rows="8"
+    class="w-full p-4 border border-slate-200 rounded-xl focus:border-[#003566] focus:ring-1 focus:ring-[#003566] outline-none text-slate-700 resize-y transition-all"
+  ></textarea>
+
+  <div class="flex justify-between text-xs text-slate-400 font-semibold px-1">
+    <span>Mínimo 50 caracteres</span>
+    <span>{{ jobDescription.length }} caracteres</span>
+  </div>
+
+  <!-- Hint Card as described in CLAUDE.md -->
+  <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-4 flex gap-3 text-left">
+    <svg class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div class="flex flex-col gap-0.5">
+      <span class="text-xs font-bold text-blue-800 uppercase tracking-wider">Dica de Sucesso</span>
+      <span class="text-xs text-blue-600 leading-relaxed">Inclua toda a seção de requisitos, habilidades técnicas e responsabilidades para que a IA faça um mapeamento preciso.</span>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+    <button
+      (click)="onBackClick()"
+      class="px-6 py-3 border border-slate-200 text-slate-600 hover:text-slate-800 font-semibold rounded-xl hover:bg-slate-50 transition-all text-base"
+    >
+      &larr; Voltar
+    </button>
+    <button
+      (click)="onSubmit()"
+      [disabled]="jobDescription.trim().length < 50 || isLoading"
+      class="px-8 py-3 bg-[#FFC300] text-[#003566] hover:bg-[#FFC300]/90 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-base"
+    >
+      @if (isLoading) {
+        <svg class="animate-spin h-5 w-5 text-[#003566]" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Analisando...
+      } @else {
+        Analisar agora
+      }
+    </button>
+  </div>
+</div>

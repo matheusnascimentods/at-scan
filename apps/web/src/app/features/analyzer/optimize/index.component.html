@@ -1,0 +1,159 @@
+<div class="w-full max-w-5xl flex flex-col gap-8">
+  <!-- STATE 1: Questions and Form -->
+  @if (!optimizeResult) {
+    <!-- Banner intro -->
+    <div class="bg-[#003566] text-white rounded-3xl p-8 flex flex-col gap-3 text-left">
+      <h2 class="text-3xl font-extrabold tracking-tight">✨ Otimização Assistida com IA</h2>
+      <p class="text-blue-100 text-sm max-w-2xl leading-relaxed">
+        Com base nas palavras-chave ausentes identificadas no seu currículo, nossa IA elaborou algumas perguntas. 
+        Preencha as respostas com suas experiências reais para enriquecer seu currículo sem inventar informações fictícias.
+      </p>
+    </div>
+
+    <!-- Questions list -->
+    <div class="flex flex-col gap-6">
+      @for (q of questions; track q; let idx = $index) {
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-lg p-6 flex flex-col gap-4 text-left border-l-4 border-l-[#003566]">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Pergunta {{ idx + 1 < 10 ? '0' + (idx + 1) : idx + 1 }}
+            </span>
+            <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-100 uppercase tracking-wider">
+              {{ q.tag }}
+            </span>
+          </div>
+
+          <p class="text-base font-bold text-slate-800 leading-relaxed">{{ q.text }}</p>
+
+          <textarea
+            [(ngModel)]="userAnswers[q.tag]"
+            [placeholder]="getPlaceholder(q.tag)"
+            rows="3"
+            class="w-full p-3 border border-slate-200 rounded-xl focus:border-[#003566] focus:ring-1 focus:ring-[#003566] outline-none text-slate-700 text-sm transition-all"
+          ></textarea>
+        </div>
+      } @empty {
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-lg p-8 text-center italic text-slate-500">
+          Nenhuma pergunta gerada. Você pode avançar diretamente para otimizar seu currículo.
+        </div>
+      }
+    </div>
+
+    <!-- Form Footer Actions -->
+    <div class="bg-amber-50/50 border border-amber-100 rounded-xl p-4 flex gap-3 text-left">
+      <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <div class="flex flex-col gap-0.5">
+        <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">Aviso Importante</span>
+        <span class="text-xs text-amber-600 leading-relaxed">Você pode deixar perguntas em branco se não possuir a experiência correspondente. O otimizador irá ignorar respostas vazias.</span>
+      </div>
+    </div>
+
+    <div class="flex justify-end pt-4">
+      <button
+        (click)="onSubmit()"
+        [disabled]="isLoading"
+        class="px-8 py-4 bg-[#003566] text-white hover:bg-[#003566]/90 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-lg cursor-pointer"
+      >
+        @if (isLoading) {
+          <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Gerando Currículo Otimizado...
+        } @else {
+          ✨ Gerar currículo otimizado
+        }
+      </button>
+    </div>
+  }
+
+  <!-- STATE 2: Comparison & Results -->
+  @if (optimizeResult) {
+    <!-- Success Banner -->
+    <div class="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-3xl p-6 flex gap-4 text-left items-center">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-xl shadow-inner shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <div class="flex flex-col gap-0.5">
+        <h3 class="text-lg font-bold">Otimização concluída com sucesso!</h3>
+        <p class="text-sm text-emerald-600">Seu currículo foi reestruturado de forma inteligente agregando as novas informações.</p>
+      </div>
+    </div>
+
+    <!-- Comparative Dashboard Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <!-- Left Panel: Score Comparison -->
+      <div class="md:col-span-5 bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col items-center text-center gap-6">
+        <h3 class="font-bold text-slate-800 text-lg">Evolução do Score ATS</h3>
+
+        <div class="flex items-center justify-center gap-6 py-4">
+          <!-- Previous Score -->
+          <div class="flex flex-col items-center gap-1.5">
+            <div class="flex items-center justify-center w-24 h-24 rounded-full border-4 border-slate-300 bg-slate-50 text-slate-500 font-bold text-2xl">
+              {{ optimizeResult.previousScore }}
+            </div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Anterior</span>
+          </div>
+
+          <!-- Arrow & Badge -->
+          <div class="flex flex-col items-center gap-2">
+            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-black rounded-full border border-emerald-100">
+              +{{ optimizeResult.gain }} pts
+            </span>
+          </div>
+
+          <!-- New Score -->
+          <div class="flex flex-col items-center gap-1.5">
+            <div class="flex items-center justify-center w-24 h-24 rounded-full border-4 border-emerald-500 bg-emerald-50 text-emerald-600 font-bold text-2xl">
+              {{ optimizeResult.newScore }}
+            </div>
+            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Novo Score</span>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 px-4 leading-relaxed">
+          A inclusão dos detalhes técnicos fornecidos aumentou a relevância do seu perfil para a vaga em questão.
+        </p>
+      </div>
+
+      <!-- Right Panel: Changes Log -->
+      <div class="md:col-span-7 bg-white rounded-3xl border border-slate-100 shadow-xl p-6 flex flex-col gap-4 text-left">
+        <h3 class="font-bold text-slate-800 text-lg">O que foi alterado</h3>
+
+        <div class="flex flex-col gap-4">
+          @for (chg of optimizeResult.changes; track chg) {
+            <div class="bg-slate-50/50 border border-slate-100 rounded-xl p-4 flex flex-col gap-1.5">
+              <span class="text-xs font-bold text-[#003566] uppercase tracking-wider">{{ chg.section }}</span>
+              <p class="text-sm text-slate-600 leading-relaxed">{{ chg.description }}</p>
+            </div>
+          } @empty {
+            <p class="text-sm text-slate-400 italic">Nenhuma alteração pontual documentada pelo otimizador.</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Footer -->
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-6 border-t border-slate-100">
+      <button
+        (click)="downloadResume()"
+        class="w-full sm:w-auto px-8 py-3 bg-[#003566] text-white hover:bg-[#003566]/90 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-base cursor-pointer"
+      >
+        ⬇ Baixar currículo otimizado
+      </button>
+      <button
+        (click)="onRestartClick()"
+        class="w-full sm:w-auto px-8 py-3 border border-slate-200 text-slate-600 hover:text-slate-800 font-semibold rounded-xl hover:bg-slate-50 transition-all text-base cursor-pointer"
+      >
+        Analisar outra vaga
+      </button>
+    </div>
+  }
+</div>
