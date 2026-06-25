@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Resume {
+  id        String     @id @default(uuid()) @db.Uuid
+  content   String     @db.Text
+  fileName  String
+  fileSize  Int?
+  language  String?    @default("pt")
+  createdAt DateTime   @default(now())
+  analyses  Analysis[]
+
+  @@map("resumes")
+}
+
+model Analysis {
+  id              String        @id @default(uuid()) @db.Uuid
+  resumeId        String        @db.Uuid
+  resume          Resume        @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobDescription  String        @db.Text
+  resumeContent   String        @db.Text
+  score           Int
+  breakdown       Json
+  matchedKeywords String[]
+  missingKeywords String[]
+  formatIssues    String[]
+  recommendations Json
+  questions       Json
+  createdAt       DateTime      @default(now())
+  optimization    Optimization?
+
+  @@index([resumeId])
+  @@index([score])
+  @@index([createdAt])
+  @@map("analyses")
+}
+
+model Optimization {
+  id               String   @id @default(uuid()) @db.Uuid
+  analysisId       String   @unique @db.Uuid
+  analysis         Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  previousScore    Int
+  newScore         Int
+  gain             Int
+  optimizedContent String   @db.Text
+  changes          Json
+  answers          Json
+  createdAt        DateTime @default(now())
+
+  @@index([gain])
+  @@index([createdAt])
+  @@map("optimizations")
+}

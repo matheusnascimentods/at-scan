@@ -1,60 +1,63 @@
 import { z } from 'zod';
 
-export const QuestionSchema = z.object({
-  tag: z.string(),
-  text: z.string(),
-});
-
-export const RecommendationSchema = z.object({
-  priority: z.enum(['Alta', 'Média', 'Baixa']),
-  text: z.string(),
-  impact: z.string(),
-});
-
 export const AnalyzeRequestSchema = z.object({
+  resumeId: z.string().uuid(),
   resumeContent: z.string().min(100),
   jobDescription: z.string().min(50),
 });
 
+export type AnalyzeRequestDto = z.infer<typeof AnalyzeRequestSchema>;
+
 export const AnalyzeResponseSchema = z.object({
+  id: z.string().uuid(),
   score: z.number().int().min(0).max(100),
   breakdown: z.object({
-    keywordsScore: z.number().int().min(0).max(100),
-    semanticScore: z.number().int().min(0).max(100),
-    formatScore: z.number().int().min(0).max(100),
-    sectionScore: z.number().int().min(0).max(100),
+    keywordsScore: z.number().int(),
+    semanticScore: z.number().int(),
+    formatScore: z.number().int(),
+    sectionScore: z.number().int(),
   }),
   matchedKeywords: z.array(z.string()),
   missingKeywords: z.array(z.string()),
   formatIssues: z.array(z.string()),
-  recommendations: z.array(RecommendationSchema),
-  questions: z.array(QuestionSchema),
+  recommendations: z.array(z.object({
+    priority: z.enum(['Alta', 'Média', 'Baixa']),
+    text: z.string(),
+    impact: z.string(),
+  })),
+  questions: z.array(z.object({
+    tag: z.string(),
+    text: z.string(),
+  })),
 });
 
-export const OptimizeAnswerSchema = z.object({
-  tag: z.string(),
-  question: z.string(),
-  answer: z.string(),
-});
+export type AnalyzeResponseDto = z.infer<typeof AnalyzeResponseSchema>;
 
 export const OptimizeRequestSchema = z.object({
-  resumeContent: z.string().min(100),
-  jobDescription: z.string().min(50),
-  answers: z.array(OptimizeAnswerSchema),
+  analysisId: z.string().uuid(),
+  answers: z.array(z.object({
+    tag: z.string(),
+    question: z.string(),
+    answer: z.string(),
+  })),
 });
 
+export type OptimizeRequestDto = z.infer<typeof OptimizeRequestSchema>;
+export type OptimizeAnswerDto = OptimizeRequestDto['answers'][number];
+
 export const OptimizeResponseSchema = z.object({
-  previousScore: z.number().int().min(0).max(100),
-  newScore: z.number().int().min(0).max(100),
+  id: z.string().uuid(),
+  previousScore: z.number().int(),
+  newScore: z.number().int(),
   gain: z.number().int(),
   optimizedContent: z.string(),
-  changes: z.array(
-    z.object({
-      section: z.string(),
-      description: z.string(),
-    }),
-  ),
+  changes: z.array(z.object({
+    section: z.string(),
+    description: z.string(),
+  })),
 });
+
+export type OptimizeResponseDto = z.infer<typeof OptimizeResponseSchema>;
 
 export const ResumeParserOutputSchema = z.object({
   sections: z.array(
@@ -128,7 +131,10 @@ export const FormatCheckerOutputSchema = z.object({
 });
 
 export const QuestionGeneratorOutputSchema = z.object({
-  questions: z.array(QuestionSchema).min(3).max(5),
+  questions: z.array(z.object({
+    tag: z.string(),
+    text: z.string(),
+  })).min(3).max(5),
 });
 
 export const ResumeOptimizerOutputSchema = z.object({
@@ -136,11 +142,6 @@ export const ResumeOptimizerOutputSchema = z.object({
   changes: OptimizeResponseSchema.shape.changes,
 });
 
-export type AnalyzeRequestDto = z.infer<typeof AnalyzeRequestSchema>;
-export type AnalyzeResponseDto = z.infer<typeof AnalyzeResponseSchema>;
-export type OptimizeAnswerDto = z.infer<typeof OptimizeAnswerSchema>;
-export type OptimizeRequestDto = z.infer<typeof OptimizeRequestSchema>;
-export type OptimizeResponseDto = z.infer<typeof OptimizeResponseSchema>;
 export type ResumeParserOutputDto = z.infer<typeof ResumeParserOutputSchema>;
 export type JobParserOutputDto = z.infer<typeof JobParserOutputSchema>;
 export type SemanticMatchOutputDto = z.infer<typeof SemanticMatchOutputSchema>;
@@ -151,3 +152,4 @@ export type QuestionGeneratorOutputDto = z.infer<
 export type ResumeOptimizerOutputDto = z.infer<
   typeof ResumeOptimizerOutputSchema
 >;
+
