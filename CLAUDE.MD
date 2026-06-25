@@ -638,7 +638,7 @@ OptimizerOrchestratorAgent
 ### `apps/api/.env`
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5433/ats_db"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/atscan"
 GEMINI_API_KEY="your-gemini-api-key"
 GEMINI_MODEL="gemini-2.0-flash"
 PORT=3000

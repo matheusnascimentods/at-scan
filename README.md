@@ -180,19 +180,19 @@ docker compose --profile db --profile api --profile web down -v
 
 ## Banco de Dados (PostgreSQL)
 
-Para desenvolvimento local, suba apenas o PostgreSQL com Docker. A configuração replica a conexão usada no DBeaver:
+Para desenvolvimento local, suba apenas o PostgreSQL com Docker:
 
 | Parâmetro | Valor |
 |---|---|
 | Host | `127.0.0.1` |
 | Porta | `5433` |
-| Banco | `samiqa` |
+| Banco | `atscan` |
 | Usuário | `postgres` |
 | Senha | `postgres` |
 
 **String de conexão (`DATABASE_URL`):**
 ```
-postgresql://postgres:postgres@localhost:5433/samiqa
+postgresql://postgres:postgres@localhost:5433/atscan
 ```
 
 ### Subir o banco
