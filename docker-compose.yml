@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    profiles: ["db"]
+    container_name: atscan-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: samiqa
+    ports:
+      - "5433:5432"
+    volumes:
+      - atscan_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d samiqa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  atscan_pg_data:

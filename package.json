@@ -18,5 +18,11 @@
   },
   "dependencies": {
     "zod": "^4.4.3"
+  },
+  "scripts": {
+    "db:up": "docker compose --profile db up -d",
+    "db:up:logs": "docker compose --profile db up",
+    "db:down": "docker compose --profile db down",
+    "db:down:clean": "docker compose --profile db down -v"
   }
 }

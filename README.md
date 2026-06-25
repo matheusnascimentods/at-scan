@@ -178,9 +178,58 @@ Para derrubar e limpar volumes:
 docker compose --profile db --profile api --profile web down -v
 ```
 
+## Banco de Dados (PostgreSQL)
+
+Para desenvolvimento local, suba apenas o PostgreSQL com Docker. A configuração replica a conexão usada no DBeaver:
+
+| Parâmetro | Valor |
+|---|---|
+| Host | `127.0.0.1` |
+| Porta | `5433` |
+| Banco | `samiqa` |
+| Usuário | `postgres` |
+| Senha | `postgres` |
+
+**String de conexão (`DATABASE_URL`):**
+```
+postgresql://postgres:postgres@localhost:5433/samiqa
+```
+
+### Subir o banco
+
+Pré-requisito: Docker e Docker Compose v2+.
+
+**Em background (sem logs no terminal):**
+```bash
+npm run db:up
+```
+
+**Em foreground (com logs em tempo real):**
+```bash
+npm run db:up:logs
+```
+
+Aguarde o healthcheck ficar saudável (`docker compose --profile db ps`) e aplique as migrations:
+
+```bash
+npm run --prefix apps/api prisma migrate deploy
+```
+
+### Parar o banco
+
+**Manter dados:**
+```bash
+npm run db:down
+```
+
+**Remover volume (apaga todos os dados):**
+```bash
+npm run db:down:clean
+```
+
 ## Rodando Localmente (sem Docker)
 
-Pré-requisitos: Node.js v20+, PostgreSQL local (ou usar profile `db` do Docker)
+Pré-requisitos: Node.js v20+, PostgreSQL local (ou use `npm run db:up` acima)
 
 ```bash
 npm install
