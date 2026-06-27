@@ -30,13 +30,14 @@ describe('AnalyzerService', () => {
 
   it('should upload resume', () => {
     const mockResponse = { id: 'uuid-123', content: 'markdown content', createdAt: '2026-06-23' };
-    service.uploadResume('base64String', 'test.pdf').subscribe(res => {
+    service.uploadResume(new File(['pdf-content'], 'test.pdf', { type: 'application/pdf' }), 'test.pdf').subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}/resumes`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ fileBase64: 'base64String', fileName: 'test.pdf' });
+    expect(req.request.body instanceof FormData).toBeTrue();
+    expect(req.request.body.get('file')).toEqual(jasmine.any(File));
     req.flush(mockResponse);
   });
 

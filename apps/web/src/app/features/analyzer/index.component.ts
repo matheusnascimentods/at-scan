@@ -35,11 +35,11 @@ export class AnalyzerComponent {
 
   constructor(private analyzerService: AnalyzerService) {}
 
-  onFileSelected(event: { fileBase64: string; fileName: string }): void {
+  onFileSelected(event: { file: File; fileName: string }): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.analyzerService.uploadResume(event.fileBase64, event.fileName).subscribe({
+    this.analyzerService.uploadResume(event.file, event.fileName).subscribe({
       next: (res) => {
         this.resumeId = res.id;
         this.resumeContent = res.content;

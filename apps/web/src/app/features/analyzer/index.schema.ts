@@ -1,11 +1,5 @@
 import { z } from 'zod';
 
-export const ProcessResumeSchema = z.object({
-  fileBase64: z.string(),
-  fileName: z.string(),
-});
-export type ProcessResumeDto = z.infer<typeof ProcessResumeSchema>;
-
 export const ResumeResponseSchema = z.object({
   id: z.string().uuid(),
   content: z.string(),

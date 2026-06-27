@@ -10,13 +10,15 @@ describe('AnalyzerComponent', () => {
   let mockService: jasmine.SpyObj<AnalyzerService>;
 
   beforeEach(async () => {
-    mockService = jasmine.createSpyObj('AnalyzerService', ['uploadResume', 'analyze', 'optimize']);
+    mockService = jasmine.createSpyObj('AnalyzerService', [
+      'uploadResume',
+      'analyze',
+      'optimize',
+    ]);
 
     await TestBed.configureTestingModule({
       imports: [AnalyzerComponent],
-      providers: [
-        { provide: AnalyzerService, useValue: mockService }
-      ]
+      providers: [{ provide: AnalyzerService, useValue: mockService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnalyzerComponent);
@@ -34,13 +36,21 @@ describe('AnalyzerComponent', () => {
   });
 
   it('should advance to step 1 and save resume content when file is selected successfully', () => {
-    const mockUploadResponse = { id: 'uuid-123', content: 'resume markdown content', createdAt: '2026' };
+    const mockUploadResponse = {
+      id: 'uuid-123',
+      content: 'resume markdown content',
+      createdAt: '2026',
+    };
     mockService.uploadResume.and.returnValue(of(mockUploadResponse));
 
-    fixture.detectChanges();
-    component.onFileSelected({ fileBase64: 'base64', fileName: 'cv.pdf' });
+    const file = new File(['pdf-content'], 'cv.pdf', {
+      type: 'application/pdf',
+    });
 
-    expect(mockService.uploadResume).toHaveBeenCalledWith('base64', 'cv.pdf');
+    fixture.detectChanges();
+    component.onFileSelected({ file, fileName: 'cv.pdf' });
+
+    expect(mockService.uploadResume).toHaveBeenCalledWith(file, 'cv.pdf');
     expect(component.resumeId).toBe('uuid-123');
     expect(component.resumeContent).toBe('resume markdown content');
     expect(component.activeStep).toBe(1);
@@ -48,10 +58,16 @@ describe('AnalyzerComponent', () => {
   });
 
   it('should handle upload error', () => {
-    mockService.uploadResume.and.returnValue(throwError(() => new Error('Upload error')));
-    
+    mockService.uploadResume.and.returnValue(
+      throwError(() => new Error('Upload error')),
+    );
+
+    const file = new File(['pdf-content'], 'cv.pdf', {
+      type: 'application/pdf',
+    });
+
     fixture.detectChanges();
-    component.onFileSelected({ fileBase64: 'base64', fileName: 'cv.pdf' });
+    component.onFileSelected({ file, fileName: 'cv.pdf' });
 
     expect(component.errorMessage).toContain('Erro ao processar');
     expect(component.isLoading).toBeFalse();
@@ -61,20 +77,30 @@ describe('AnalyzerComponent', () => {
   it('should advance to step 2 and store analysis results when job description is submitted', () => {
     const mockAnalyzeResponse = {
       score: 73,
-      breakdown: { keywordsScore: 80, semanticScore: 68, formatScore: 90, sectionScore: 55 },
+      breakdown: {
+        keywordsScore: 80,
+        semanticScore: 68,
+        formatScore: 90,
+        sectionScore: 55,
+      },
       matchedKeywords: ['Python'],
       missingKeywords: ['Redis'],
       formatIssues: [],
       recommendations: [],
-      questions: []
+      questions: [],
     };
     mockService.analyze.and.returnValue(of(mockAnalyzeResponse));
 
     fixture.detectChanges();
     component.resumeContent = 'my resume markdown';
-    component.onJobDescriptionSubmit('Job requirements text for developer position...');
+    component.onJobDescriptionSubmit(
+      'Job requirements text for developer position...',
+    );
 
-    expect(mockService.analyze).toHaveBeenCalledWith('my resume markdown', 'Job requirements text for developer position...');
+    expect(mockService.analyze).toHaveBeenCalledWith(
+      'my resume markdown',
+      'Job requirements text for developer position...',
+    );
     expect(component.analyzeResult).toEqual(mockAnalyzeResponse);
     expect(component.activeStep).toBe(2);
     expect(component.isLoading).toBeFalse();
@@ -94,7 +120,7 @@ describe('AnalyzerComponent', () => {
       newScore: 91,
       gain: 18,
       optimizedContent: 'new markdown',
-      changes: []
+      changes: [],
     };
     mockService.optimize.and.returnValue(of(mockOptimizeResponse));
 
@@ -105,13 +131,13 @@ describe('AnalyzerComponent', () => {
     const answers = [
       { tag: 'docker', question: 'Q1', answer: 'Yes' },
       { tag: 'redis', question: 'Q2', answer: '  ' },
-      { tag: 'kubernetes', question: 'Q3', answer: '' }
+      { tag: 'kubernetes', question: 'Q3', answer: '' },
     ];
 
     component.onAnswersSubmit(answers);
 
     expect(mockService.optimize).toHaveBeenCalledWith('my resume', 'my job', [
-      { tag: 'docker', question: 'Q1', answer: 'Yes' }
+      { tag: 'docker', question: 'Q1', answer: 'Yes' },
     ]);
     expect(component.optimizeResult).toEqual(mockOptimizeResponse);
     expect(component.isLoading).toBeFalse();

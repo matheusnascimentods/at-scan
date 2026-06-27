@@ -8,7 +8,7 @@ describe('UploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UploadComponent]
+      imports: [UploadComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UploadComponent);
@@ -26,8 +26,10 @@ describe('UploadComponent', () => {
   });
 
   it('should enable Next button and show filename when a valid PDF file is selected', (done) => {
-    const file = new File(['pdf content'], 'resume.pdf', { type: 'application/pdf' });
-    
+    const file = new File(['pdf content'], 'resume.pdf', {
+      type: 'application/pdf',
+    });
+
     const event = { target: { files: [file] } } as unknown as Event;
     component.onFileSelected(event);
 
@@ -43,7 +45,9 @@ describe('UploadComponent', () => {
   });
 
   it('should reject non-PDF file and show error message', () => {
-    const file = new File(['docx content'], 'resume.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    const file = new File(['docx content'], 'resume.docx', {
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    });
     const event = { target: { files: [file] } } as unknown as Event;
     component.onFileSelected(event);
 
@@ -54,12 +58,15 @@ describe('UploadComponent', () => {
   });
 
   it('should emit fileSelected when clicking Next', (done) => {
+    const file = new File(['pdf content'], 'resume.pdf', {
+      type: 'application/pdf',
+    });
     component.fileName = 'resume.pdf';
-    component.fileBase64 = 'base64Content';
+    component.file = file;
     fixture.detectChanges();
 
-    component.fileSelected.subscribe(event => {
-      expect(event.fileBase64).toBe('base64Content');
+    component.fileSelected.subscribe((event) => {
+      expect(event.file).toBe(file);
       expect(event.fileName).toBe('resume.pdf');
       done();
     });
@@ -70,7 +77,7 @@ describe('UploadComponent', () => {
 
   it('should update border class on dragover/dragleave', () => {
     const dropzone = fixture.debugElement.query(By.css('div.cursor-pointer'));
-    
+
     const dragOverEvent = new DragEvent('dragover');
     dropzone.nativeElement.dispatchEvent(dragOverEvent);
     fixture.detectChanges();

@@ -2,9 +2,12 @@ import { LlmAgent, Runner } from '@google/adk';
 
 import { ResumeParserAgent } from './index.agent';
 
-const mockRunEphemeral = jest.fn<
-  (params: Parameters<Runner['runEphemeral']>[0]) => AsyncGenerator<{ text: string }>
->();
+const mockRunEphemeral =
+  jest.fn<
+    (
+      params: Parameters<Runner['runEphemeral']>[0],
+    ) => AsyncGenerator<{ text: string }>
+  >();
 
 jest.mock('@google/adk', () => ({
   InMemorySessionService: jest.fn(),
@@ -22,6 +25,34 @@ async function* events(text: string) {
 
 describe('ResumeParserAgent', () => {
   beforeEach(() => jest.clearAllMocks());
+
+  it('extracts Markdown from PDF using inlineData', async () => {
+    mockRunEphemeral.mockReturnValue(events('# Curriculo'));
+
+    const result = await new ResumeParserAgent().extractMarkdownFromPdf({
+      fileBase64: 'JVBERi0xLjQ=',
+      fileName: 'curriculo.pdf',
+      mimeType: 'application/pdf',
+    });
+    const message = mockRunEphemeral.mock.calls[0][0];
+
+    expect(result).toBe('# Curriculo');
+    expect(message.newMessage.parts).toEqual([
+      { text: 'Convert this PDF resume to Markdown. File name: curriculo.pdf' },
+      {
+        inlineData: {
+          data: 'JVBERi0xLjQ=',
+          mimeType: 'application/pdf',
+        },
+      },
+    ]);
+    expect(LlmAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'ResumeParserAgent',
+        instruction: expect.stringContaining('resume extraction specialist'),
+      }),
+    );
+  });
 
   it('loads its prompt, calls ADK, and parses resume JSON', async () => {
     const output = {

@@ -1,9 +1,7 @@
 jest.mock('@google/adk', () => ({
   InMemorySessionService: jest.fn(),
   LlmAgent: jest.fn(),
-  Runner: jest
-    .fn()
-    .mockImplementation(() => ({ runEphemeral: jest.fn() })),
+  Runner: jest.fn().mockImplementation(() => ({ runEphemeral: jest.fn() })),
   stringifyContent: jest.fn(),
 }));
 
@@ -20,7 +18,7 @@ const validBase64 = Buffer.from('conteudo-pdf').toString('base64');
 describe('ResumesService', () => {
   let service: ResumesService;
   let prisma: jest.Mocked<Pick<PrismaService, 'resume'>>;
-  let mockResumeParserAgent: { run: jest.Mock };
+  let mockResumeParserAgent: { extractMarkdownFromPdf: jest.Mock };
 
   beforeEach(() => {
     prisma = {
@@ -30,7 +28,7 @@ describe('ResumesService', () => {
       },
     } as unknown as jest.Mocked<Pick<PrismaService, 'resume'>>;
 
-    mockResumeParserAgent = { run: jest.fn() };
+    mockResumeParserAgent = { extractMarkdownFromPdf: jest.fn() };
 
     service = new ResumesService(
       prisma as unknown as PrismaService,
@@ -42,18 +40,21 @@ describe('ResumesService', () => {
     const validDto: ProcessResumeDto = {
       fileBase64: validBase64,
       fileName: 'curriculo.pdf',
+      mimeType: 'application/pdf',
     };
 
     it('base64 válido → chama agente, persiste e retorna ResumeResponseDto com id', async () => {
       const markdown = '# Currículo em Markdown';
-      mockResumeParserAgent.run.mockResolvedValue(markdown);
+      mockResumeParserAgent.extractMarkdownFromPdf.mockResolvedValue(markdown);
       prisma.resume.create.mockResolvedValue(
         persistedResume(markdown, validDto.fileName),
       );
 
       const result = await service.processResume(validDto);
 
-      expect(mockResumeParserAgent.run).toHaveBeenCalledWith(validDto);
+      expect(mockResumeParserAgent.extractMarkdownFromPdf).toHaveBeenCalledWith(
+        validDto,
+      );
       expect(prisma.resume.create).toHaveBeenCalledWith({
         data: {
           content: markdown,
@@ -75,7 +76,9 @@ describe('ResumesService', () => {
           fileBase64: '!!!invalid-base64!!!',
         }),
       ).rejects.toMatchObject({ status: HttpStatus.UNPROCESSABLE_ENTITY });
-      expect(mockResumeParserAgent.run).not.toHaveBeenCalled();
+      expect(
+        mockResumeParserAgent.extractMarkdownFromPdf,
+      ).not.toHaveBeenCalled();
     });
 
     it('PDF vazio (0 bytes após decode) → HttpException 422', async () => {
@@ -85,11 +88,13 @@ describe('ResumesService', () => {
           fileBase64: '===',
         }),
       ).rejects.toMatchObject({ status: HttpStatus.UNPROCESSABLE_ENTITY });
-      expect(mockResumeParserAgent.run).not.toHaveBeenCalled();
+      expect(
+        mockResumeParserAgent.extractMarkdownFromPdf,
+      ).not.toHaveBeenCalled();
     });
 
     it('agente retorna string vazia → HttpException 502', async () => {
-      mockResumeParserAgent.run.mockResolvedValue('   ');
+      mockResumeParserAgent.extractMarkdownFromPdf.mockResolvedValue('   ');
 
       await expect(service.processResume(validDto)).rejects.toMatchObject({
         status: HttpStatus.BAD_GATEWAY,
@@ -98,7 +103,9 @@ describe('ResumesService', () => {
     });
 
     it('agente lança exceção → HttpException 502', async () => {
-      mockResumeParserAgent.run.mockRejectedValue(new Error('timeout'));
+      mockResumeParserAgent.extractMarkdownFromPdf.mockRejectedValue(
+        new Error('timeout'),
+      );
 
       await expect(service.processResume(validDto)).rejects.toMatchObject({
         status: HttpStatus.BAD_GATEWAY,

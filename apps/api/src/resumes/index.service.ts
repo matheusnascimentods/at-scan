@@ -40,10 +40,7 @@ export class ResumesService {
     this.validateUuid(id);
     const resume = await this.prisma.resume.findUnique({ where: { id } });
     if (!resume) {
-      throw new HttpException(
-        'Currículo não encontrado',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('Currículo não encontrado', HttpStatus.NOT_FOUND);
     }
     return this.mapToDto(resume);
   }
@@ -79,10 +76,7 @@ export class ResumesService {
 
   private async extractContent(dto: ProcessResumeDto): Promise<string> {
     try {
-      return await this.resumeParserAgent.run({
-        fileBase64: dto.fileBase64,
-        fileName: dto.fileName,
-      });
+      return await this.resumeParserAgent.extractMarkdownFromPdf(dto);
     } catch {
       throw new HttpException(
         'Erro ao processar currículo com IA',

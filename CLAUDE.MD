@@ -452,13 +452,13 @@ Nenhuma rota exige autenticação.
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/resumes` | Recebe PDF em base64, IA converte para Markdown e salva |
+| `POST` | `/resumes` | Recebe PDF via `multipart/form-data`, IA converte para Markdown e salva |
 | `GET` | `/resumes/:id` | Retorna o Markdown de um currículo |
 
 **POST /resumes**
-```json
-// Request
-{ "fileBase64": "string — PDF codificado em base64", "fileName": "string" }
+```http
+// Request multipart/form-data
+file: File — PDF enviado no campo `file`
 
 // Response 201
 { "id": "uuid", "content": "string — Markdown gerado pela IA", "createdAt": "ISO8601" }
@@ -602,7 +602,7 @@ OptimizerOrchestratorAgent
 
 [Tela 2] Step 1 — Upload
   → usuário dropa o PDF
-  → front converte para base64 e chama POST /resumes
+  → front envia o PDF via FormData no campo `file` e chama POST /resumes
   → recebe { id, content } e armazena no estado do componente pai
   → botão "Próximo" habilita
 
@@ -763,10 +763,9 @@ Agentes **não são testados com chamadas reais ao Gemini**. Todo teste de agent
 
 | Endpoint | Caso | Status esperado |
 |---|---|---|
-| `POST /resumes` | payload válido com base64 real | 201 + body com `id`, `content`, `createdAt` |
-| `POST /resumes` | sem campo `fileBase64` | 400 |
-| `POST /resumes` | sem campo `fileName` | 400 |
-| `POST /resumes` | `fileBase64` não é string base64 válida | 422 |
+| `POST /resumes` | multipart válido com PDF no campo `file` | 201 + body com `id`, `content`, `createdAt` |
+| `POST /resumes` | sem arquivo `file` | 400 |
+| `POST /resumes` | arquivo não PDF | 400 |
 | `GET /resumes/:id` | id existente | 200 + body com `id`, `content`, `createdAt` |
 | `GET /resumes/:id` | id inexistente | 404 |
 | `GET /resumes/:id` | id mal formatado | 400 |
@@ -916,7 +915,7 @@ Agentes **não são testados com chamadas reais ao Gemini**. Todo teste de agent
 
 | Caso | O que verificar |
 |---|---|
-| `uploadResume()` chama `POST /resumes` com base64 correto | HttpClient mock verifica URL e payload |
+| `uploadResume()` chama `POST /resumes` com `FormData` | HttpClient mock verifica URL e payload com arquivo no campo `file` |
 | `uploadResume()` retorna `ResumeResponseDto` com `id` e `content` | Retorno tipado corretamente |
 | `analyze()` chama `POST /ats/analyze` com `resumeId`, `resumeContent` e `jobDescription` | URL e body corretos |
 | `analyze()` retorna `AnalyzeResponseDto` com `id` | Todos os campos presentes incluindo o id da análise |

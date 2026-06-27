@@ -6,13 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './index.component.html',
-  styleUrls: []
+  styleUrls: [],
 })
 export class UploadComponent {
-  @Output() fileSelected = new EventEmitter<{ fileBase64: string; fileName: string }>();
+  @Output() fileSelected = new EventEmitter<{ file: File; fileName: string }>();
 
   fileName: string | null = null;
-  fileBase64: string | null = null;
+  file: File | null = null;
   errorMessage: string | null = null;
   isDragOver = false;
 
@@ -57,31 +57,18 @@ export class UploadComponent {
     if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
       this.errorMessage = 'Apenas arquivos PDF são permitidos.';
       this.fileName = null;
-      this.fileBase64 = null;
+      this.file = null;
       return;
     }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      // Get only the base64 part, removing "data:application/pdf;base64,"
-      const base64Data = result.split(',')[1];
-      this.fileBase64 = base64Data;
-      this.fileName = file.name;
-    };
-    reader.onerror = () => {
-      this.errorMessage = 'Erro ao ler o arquivo currículo.';
-      this.fileName = null;
-      this.fileBase64 = null;
-    };
-    reader.readAsDataURL(file);
+    this.file = file;
+    this.fileName = file.name;
   }
 
   onNext(): void {
-    if (this.fileBase64 && this.fileName) {
+    if (this.file && this.fileName) {
       this.fileSelected.emit({
-        fileBase64: this.fileBase64,
-        fileName: this.fileName
+        file: this.file,
+        fileName: this.fileName,
       });
     }
   }

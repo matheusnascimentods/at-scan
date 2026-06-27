@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -7,10 +6,18 @@ import {
   HttpStatus,
   Param,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-import { ProcessResumeSchema } from './index.schema';
 import { ResumesService } from './index.service';
+
+type UploadedResumeFile = {
+  buffer: Buffer;
+  originalname: string;
+  mimetype: string;
+};
 
 @Controller('resumes')
 export class ResumesController {
@@ -18,15 +25,32 @@ export class ResumesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  processResume(@Body() body: unknown) {
-    const parsed = ProcessResumeSchema.safeParse(body);
-    if (!parsed.success) {
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: 5 * 1024 * 1024 } }),
+  )
+  processResume(@UploadedFile() file: UploadedResumeFile | undefined) {
+    if (!file) {
       throw new HttpException(
-        'Dados do currículo inválidos',
+        'Arquivo PDF obrigatório',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return this.service.processResume(parsed.data);
+
+    if (
+      file.mimetype !== 'application/pdf' &&
+      !file.originalname.toLowerCase().endsWith('.pdf')
+    ) {
+      throw new HttpException(
+        'Apenas arquivos PDF são permitidos',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return this.service.processResume({
+      fileBase64: file.buffer.toString('base64'),
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+    });
   }
 
   @Get(':id')

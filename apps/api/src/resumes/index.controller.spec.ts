@@ -11,13 +11,11 @@ import { ResumeResponseDto } from './index.schema';
 import { ResumesService } from './index.service';
 
 const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
-const validBase64 = Buffer.from('conteudo-pdf').toString('base64');
+const pdfBuffer = Buffer.from('%PDF-1.4 conteudo-pdf');
 
 describe('ResumesController', () => {
   let app: INestApplication;
-  let service: jest.Mocked<
-    Pick<ResumesService, 'processResume' | 'findById'>
-  >;
+  let service: jest.Mocked<Pick<ResumesService, 'processResume' | 'findById'>>;
 
   beforeEach(async () => {
     service = {
@@ -39,62 +37,60 @@ describe('ResumesController', () => {
   });
 
   describe('POST /resumes', () => {
-    it('payload válido com base64 real → 201 + body completo', async () => {
+    it('multipart válido com PDF real → 201 + body completo', async () => {
       const response = resumeResponse();
       service.processResume.mockResolvedValue(response);
 
       const { body, status } = await request(app.getHttpServer())
         .post('/resumes')
-        .send({
-          fileBase64: validBase64,
-          fileName: 'curriculo.pdf',
+        .attach('file', pdfBuffer, {
+          filename: 'curriculo.pdf',
+          contentType: 'application/pdf',
         });
 
       expect(status).toBe(201);
+      expect(service.processResume).toHaveBeenCalledWith({
+        fileBase64: pdfBuffer.toString('base64'),
+        fileName: 'curriculo.pdf',
+        mimeType: 'application/pdf',
+      });
       expect(body.id).toBe(response.id);
       expect(body.content).toBe(response.content);
       expect(body.fileName).toBe(response.fileName);
       expect(body.createdAt).toBe(response.createdAt);
     });
 
-    it('sem campo fileBase64 → 400', async () => {
-      const { status } = await request(app.getHttpServer())
-        .post('/resumes')
-        .send({ fileName: 'curriculo.pdf' });
+    it('sem arquivo → 400', async () => {
+      const { status } = await request(app.getHttpServer()).post('/resumes');
 
       expect(status).toBe(400);
       expect(service.processResume).not.toHaveBeenCalled();
     });
 
-    it('sem campo fileName → 400', async () => {
-      const { status } = await request(app.getHttpServer())
-        .post('/resumes')
-        .send({ fileBase64: validBase64 });
-
-      expect(status).toBe(400);
-    });
-
-    it('fileBase64 vazio → 400', async () => {
-      const { status } = await request(app.getHttpServer())
-        .post('/resumes')
-        .send({ fileBase64: '', fileName: 'curriculo.pdf' });
-
-      expect(status).toBe(400);
-    });
-
-    it('fileBase64 não é string base64 válida → 422', async () => {
-      service.processResume.mockRejectedValue(
-        new HttpException('Base64 inválido', HttpStatus.UNPROCESSABLE_ENTITY),
-      );
+    it('arquivo sem extensão e mimetype PDF → 201', async () => {
+      const response = resumeResponse();
+      service.processResume.mockResolvedValue(response);
 
       const { status } = await request(app.getHttpServer())
         .post('/resumes')
-        .send({
-          fileBase64: '!!!invalid-base64!!!',
-          fileName: 'curriculo.pdf',
+        .attach('file', pdfBuffer, {
+          filename: 'curriculo',
+          contentType: 'application/pdf',
         });
 
-      expect(status).toBe(422);
+      expect(status).toBe(201);
+    });
+
+    it('arquivo não PDF → 400', async () => {
+      const { status } = await request(app.getHttpServer())
+        .post('/resumes')
+        .attach('file', Buffer.from('texto'), {
+          filename: 'curriculo.txt',
+          contentType: 'text/plain',
+        });
+
+      expect(status).toBe(400);
+      expect(service.processResume).not.toHaveBeenCalled();
     });
   });
 
