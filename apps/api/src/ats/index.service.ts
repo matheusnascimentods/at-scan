@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Analysis, Optimization } from '@prisma/client';
 
 import { OptimizerOrchestratorAgent } from '../agents/optimizer-orchestrator/index.agent';
@@ -19,6 +19,8 @@ import {
 
 @Injectable()
 export class AtsService {
+  private readonly logger = new Logger(AtsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly orchestrator: OrchestratorAgent,
@@ -84,7 +86,11 @@ export class AtsService {
       const result = await this.orchestrator.analyze(dto);
       const { id: _id, ...agentResult } = result;
       return agentResult;
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Erro ao processar análise com IA para o currículo "${dto.resumeId}":`,
+        error instanceof Error ? error.stack || error.message : error,
+      );
       throw new HttpException(
         'Erro ao processar análise com IA',
         HttpStatus.BAD_GATEWAY,
@@ -99,7 +105,11 @@ export class AtsService {
       const result = await this.optimizerOrchestrator.optimize(input);
       const { id: _id, ...agentResult } = result;
       return agentResult;
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Erro ao processar otimização com IA para a análise "${input.analysisId}":`,
+        error instanceof Error ? error.stack || error.message : error,
+      );
       throw new HttpException(
         'Erro ao processar otimização com IA',
         HttpStatus.BAD_GATEWAY,

@@ -10,9 +10,9 @@ import * as fs from 'fs';
 import {
   AnalyzeResponseDto,
   OptimizeAnswerDto,
-  OptimizeRequestDto,
   OptimizeResponseDto,
   OptimizeResponseSchema,
+  OptimizerAgentInputDto,
   ResumeOptimizerOutputDto,
 } from '../../ats/index.schema';
 import { OrchestratorAgent } from '../orchestrator/index.agent';
@@ -28,7 +28,9 @@ export class OptimizerOrchestratorAgent {
     private readonly resumeOptimizer: ResumeOptimizerAgent,
   ) {}
 
-  async optimize(request: OptimizeRequestDto): Promise<OptimizeResponseDto> {
+  async optimize(
+    request: OptimizerAgentInputDto,
+  ): Promise<OptimizeResponseDto> {
     const analyzeResult = await this.orchestrator.analyze(request);
     const answers = this.nonEmptyAnswers(request.answers);
     const optimizerOutput = await this.resumeOptimizer.optimizeResume(
@@ -46,7 +48,7 @@ export class OptimizerOrchestratorAgent {
   }
 
   private async consolidate(
-    request: OptimizeRequestDto,
+    request: OptimizerAgentInputDto,
     analyzeResult: AnalyzeResponseDto,
     resumeOptimizerOutput: ResumeOptimizerOutputDto,
     answers: OptimizeAnswerDto[],

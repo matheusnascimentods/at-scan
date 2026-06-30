@@ -35,6 +35,21 @@ export class AnalyzerComponent {
 
   constructor(private analyzerService: AnalyzerService) {}
 
+  private getErrorMessage(err: any, fallback: string): string {
+    if (err && err.error) {
+      if (typeof err.error.message === 'string') {
+        return err.error.message;
+      }
+      if (Array.isArray(err.error.message)) {
+        return err.error.message.join(', ');
+      }
+      if (typeof err.error === 'string') {
+        return err.error;
+      }
+    }
+    return fallback;
+  }
+
   onFileSelected(event: { file: File; fileName: string }): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -48,7 +63,7 @@ export class AnalyzerComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Erro ao processar o currículo. Verifique se o arquivo PDF está legível.';
+        this.errorMessage = this.getErrorMessage(err, 'Erro ao processar o currículo. Verifique se o arquivo PDF está legível.');
         console.error(err);
       }
     });
@@ -67,7 +82,7 @@ export class AnalyzerComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Erro ao realizar a análise ATS. Tente novamente.';
+        this.errorMessage = this.getErrorMessage(err, 'Erro ao realizar a análise ATS. Tente novamente.');
         console.error(err);
       }
     });
@@ -91,7 +106,7 @@ export class AnalyzerComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Erro ao otimizar o currículo. Tente novamente.';
+        this.errorMessage = this.getErrorMessage(err, 'Erro ao otimizar o currículo. Tente novamente.');
         console.error(err);
       }
     });

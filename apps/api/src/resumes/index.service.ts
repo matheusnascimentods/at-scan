@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Resume } from '@prisma/client';
 
 import { ResumeParserAgent } from '../agents/resume-parser/index.agent';
@@ -14,6 +14,7 @@ const UUID_PATTERN =
 
 @Injectable()
 export class ResumesService {
+  private readonly logger = new Logger(ResumesService.name);
   private readonly resumeParserAgent: ResumeParserAgentPort;
 
   constructor(
@@ -77,7 +78,11 @@ export class ResumesService {
   private async extractContent(dto: ProcessResumeDto): Promise<string> {
     try {
       return await this.resumeParserAgent.extractMarkdownFromPdf(dto);
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Erro ao processar currículo com IA para o arquivo "${dto.fileName}":`,
+        error instanceof Error ? error.stack || error.message : error,
+      );
       throw new HttpException(
         'Erro ao processar currículo com IA',
         HttpStatus.BAD_GATEWAY,

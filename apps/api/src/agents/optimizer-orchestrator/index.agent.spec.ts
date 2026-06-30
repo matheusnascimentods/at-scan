@@ -4,9 +4,12 @@ import { OrchestratorAgent } from '../orchestrator/index.agent';
 import { ResumeOptimizerAgent } from '../resume-optimizer/index.agent';
 import { OptimizerOrchestratorAgent } from './index.agent';
 
-const mockRunEphemeral = jest.fn<
-  (params: Parameters<Runner['runEphemeral']>[0]) => AsyncGenerator<{ text: string }>
->();
+const mockRunEphemeral =
+  jest.fn<
+    (
+      params: Parameters<Runner['runEphemeral']>[0],
+    ) => AsyncGenerator<{ text: string }>
+  >();
 
 jest.mock('@google/adk', () => ({
   InMemorySessionService: jest.fn(),
@@ -32,6 +35,7 @@ describe('OptimizerOrchestratorAgent', () => {
       changes: [{ section: 'Skills', description: 'Adicionado Kubernetes.' }],
     };
     const response = {
+      id: '33333333-3333-4333-8333-333333333333',
       previousScore: 73,
       newScore: 91,
       gain: 18,
@@ -46,6 +50,8 @@ describe('OptimizerOrchestratorAgent', () => {
       orchestrator,
       optimizer,
     ).optimize({
+      analysisId: '11111111-1111-4111-8111-111111111111',
+      resumeId: '22222222-2222-4222-8222-222222222222',
       resumeContent: 'r'.repeat(100),
       jobDescription: 'j'.repeat(50),
       answers: [
@@ -67,6 +73,7 @@ describe('OptimizerOrchestratorAgent', () => {
 
 function analysis() {
   return {
+    id: '44444444-4444-4444-8444-444444444444',
     score: 73,
     breakdown: {
       keywordsScore: 70,
