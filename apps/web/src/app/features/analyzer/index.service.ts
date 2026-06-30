@@ -26,10 +26,11 @@ export class AnalyzerService {
   }
 
   analyze(
+    resumeId: string,
     resumeContent: string,
     jobDescription: string,
   ): Observable<AnalyzeResponseDto> {
-    const payload: AnalyzeRequestDto = { resumeContent, jobDescription };
+    const payload: AnalyzeRequestDto = { resumeId, resumeContent, jobDescription };
     return this.http.post<AnalyzeResponseDto>(
       `${this.apiUrl}/ats/analyze`,
       payload,
@@ -37,13 +38,11 @@ export class AnalyzerService {
   }
 
   optimize(
-    resumeContent: string,
-    jobDescription: string,
+    analysisId: string,
     answers: Answer[],
   ): Observable<OptimizeResponseDto> {
     const payload: OptimizeRequestDto = {
-      resumeContent,
-      jobDescription,
+      analysisId,
       answers,
     };
     return this.http.post<OptimizeResponseDto>(

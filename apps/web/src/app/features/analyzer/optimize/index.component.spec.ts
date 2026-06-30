@@ -14,6 +14,7 @@ describe('OptimizeComponent', () => {
   ];
 
   const mockOptimizeResult: OptimizeResponseDto = {
+    id: 'opt-uuid-123',
     previousScore: 73,
     newScore: 91,
     gain: 18,

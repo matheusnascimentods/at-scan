@@ -8,6 +8,7 @@ describe('ResultComponent', () => {
   let fixture: ComponentFixture<ResultComponent>;
 
   const mockResult: AnalyzeResponseDto = {
+    id: 'analysis-uuid-123',
     score: 73,
     breakdown: {
       keywordsScore: 80,

@@ -1,106 +1,118 @@
 <div class="min-h-screen bg-slate-50 flex flex-col font-sans">
-  
+
   <!-- Global Premium Header -->
   <header class="w-full py-5 px-8 bg-[#003566] flex items-center justify-between shadow-md select-none shrink-0">
     <div class="flex items-center gap-3">
-      <div class="bg-[#FFC300] text-[#003566] font-extrabold w-8 h-8 rounded-lg flex items-center justify-center text-lg shadow-inner">A</div>
+      <div
+        class="bg-[#FFC300] text-[#003566] font-extrabold w-8 h-8 rounded-lg flex items-center justify-center text-lg shadow-inner">
+        A</div>
       <span class="text-xl font-bold text-white tracking-tight flex items-center gap-1.5">
-        ATScan <span class="text-[10px] bg-[#FFC300] text-[#003566] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider">Beta</span>
+        ATScan
       </span>
     </div>
   </header>
 
   <!-- Main Area -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-10 flex flex-col items-center gap-8">
-    
+
     <!-- Stepper Horizontal Indicator -->
     <div class="w-full max-w-3xl mb-4 select-none">
       <div class="flex justify-between items-center relative">
         <!-- Connect Line -->
         <div class="absolute left-6 right-6 top-5 h-0.5 bg-slate-200 -z-10"></div>
-        
+
         <!-- Step 1: Upload -->
         <div class="flex flex-col items-center gap-2 bg-slate-50 px-2.5">
-          <div 
-            [ngClass]="activeStep === 0 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 0 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')" 
-            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm"
-          >
+          <div
+            [ngClass]="activeStep === 0 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 0 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')"
+            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm">
             1
           </div>
-          <span [ngClass]="activeStep === 0 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'" class="text-xs transition-all duration-300">Upload do Currículo</span>
+          <span [ngClass]="activeStep === 0 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'"
+            class="text-xs transition-all duration-300">Upload do Currículo</span>
         </div>
 
         <!-- Step 2: Descrição da Vaga -->
         <div class="flex flex-col items-center gap-2 bg-slate-50 px-2.5">
-          <div 
-            [ngClass]="activeStep === 1 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 1 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')" 
-            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm"
-          >
+          <div
+            [ngClass]="activeStep === 1 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 1 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')"
+            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm">
             2
           </div>
-          <span [ngClass]="activeStep === 1 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'" class="text-xs transition-all duration-300">Descrição da Vaga</span>
+          <span [ngClass]="activeStep === 1 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'"
+            class="text-xs transition-all duration-300">Descrição da Vaga</span>
         </div>
 
         <!-- Step 3: Resultado -->
         <div class="flex flex-col items-center gap-2 bg-slate-50 px-2.5">
-          <div 
-            [ngClass]="activeStep === 2 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 2 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')" 
-            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm"
-          >
+          <div
+            [ngClass]="activeStep === 2 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : (activeStep > 2 ? 'bg-[#003566] text-white' : 'bg-slate-200 text-slate-500')"
+            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm">
             3
           </div>
-          <span [ngClass]="activeStep === 2 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'" class="text-xs transition-all duration-300">Resultado</span>
+          <span [ngClass]="activeStep === 2 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'"
+            class="text-xs transition-all duration-300">Resultado</span>
         </div>
 
         <!-- Step 4: Otimização -->
         <div class="flex flex-col items-center gap-2 bg-slate-50 px-2.5">
-          <div 
-            [ngClass]="activeStep === 3 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : 'bg-slate-200 text-slate-500'" 
-            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm"
-          >
+          <div
+            [ngClass]="activeStep === 3 ? 'bg-[#003566] text-white ring-4 ring-blue-100' : 'bg-slate-200 text-slate-500'"
+            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-sm">
             4
           </div>
-          <span [ngClass]="activeStep === 3 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'" class="text-xs transition-all duration-300">Otimização</span>
+          <span [ngClass]="activeStep === 3 ? 'text-slate-800 font-bold' : 'text-slate-400 font-semibold'"
+            class="text-xs transition-all duration-300">Otimização</span>
         </div>
       </div>
     </div>
 
     <!-- Error Banner -->
     @if (errorMessage) {
-      <div class="w-full max-w-3xl bg-rose-50 border border-rose-100 text-rose-700 px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 animate-fade-in shadow-sm">
-        <svg class="w-6 h-6 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-        </svg>
-        <span>{{ errorMessage }}</span>
-      </div>
+    <div
+      class="w-full max-w-3xl bg-rose-50 border border-rose-100 text-rose-700 px-5 py-4 rounded-2xl text-sm font-medium flex items-center gap-3 animate-fade-in shadow-sm">
+      <svg class="w-6 h-6 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+        </path>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
     }
 
     <!-- Loading Overlay -->
     @if (isLoading) {
-      <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 flex flex-col items-center gap-4 animate-scale-up">
-          <svg class="animate-spin h-10 w-10 text-[#003566]" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <div class="text-center flex flex-col gap-1">
-            <h4 class="font-bold text-slate-800 text-lg">Processando</h4>
-            <p class="text-xs text-slate-400 max-w-xs">Nossos agentes inteligentes estão analisando os dados com IA...</p>
-          </div>
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-4">
+      <div
+        class="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 flex flex-col items-center gap-4 animate-scale-up">
+        <svg class="animate-spin h-10 w-10 text-[#003566]" fill="none" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        <div class="text-center flex flex-col gap-1">
+          <h4 class="font-bold text-slate-800 text-lg">Processando</h4>
+          <p class="text-xs text-slate-400 max-w-xs">Nossos agentes inteligentes estão analisando os dados com IA...</p>
         </div>
       </div>
+    </div>
     }
 
     <!-- Render Active Step Component -->
     <div class="w-full flex justify-center animate-fade-in">
       @if (activeStep === 0) {
-        <app-analyzer-upload (fileSelected)="onFileSelected($event)"></app-analyzer-upload>
+      <app-analyzer-upload (fileSelected)="onFileSelected($event)"></app-analyzer-upload>
       } @else if (activeStep === 1) {
-        <app-analyzer-job-description (back)="onBack()" (jobDescriptionSubmit)="onJobDescriptionSubmit($event)"></app-analyzer-job-description>
+      <app-analyzer-job-description (back)="onBack()"
+        (jobDescriptionSubmit)="onJobDescriptionSubmit($event)"></app-analyzer-job-description>
       } @else if (activeStep === 2) {
-        <app-analyzer-result [analyzeResult]="analyzeResult" (optimize)="onOptimize()"></app-analyzer-result>
+      <app-analyzer-result [analyzeResult]="analyzeResult" (optimize)="onOptimize()"></app-analyzer-result>
       } @else if (activeStep === 3) {
-        <app-analyzer-optimize [questions]="analyzeResult?.questions || []" [optimizeResult]="optimizeResult" (answersSubmit)="onAnswersSubmit($event)" (restart)="onRestart()"></app-analyzer-optimize>
+      <app-analyzer-optimize [questions]="analyzeResult?.questions || []" [optimizeResult]="optimizeResult"
+        (answersSubmit)="onAnswersSubmit($event)" (restart)="onRestart()"></app-analyzer-optimize>
       }
     </div>
 

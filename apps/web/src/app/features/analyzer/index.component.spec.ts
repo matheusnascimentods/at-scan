@@ -76,6 +76,7 @@ describe('AnalyzerComponent', () => {
 
   it('should advance to step 2 and store analysis results when job description is submitted', () => {
     const mockAnalyzeResponse = {
+      id: 'analysis-uuid-123',
       score: 73,
       breakdown: {
         keywordsScore: 80,
@@ -92,12 +93,14 @@ describe('AnalyzerComponent', () => {
     mockService.analyze.and.returnValue(of(mockAnalyzeResponse));
 
     fixture.detectChanges();
+    component.resumeId = 'resume-uuid-123';
     component.resumeContent = 'my resume markdown';
     component.onJobDescriptionSubmit(
       'Job requirements text for developer position...',
     );
 
     expect(mockService.analyze).toHaveBeenCalledWith(
+      'resume-uuid-123',
       'my resume markdown',
       'Job requirements text for developer position...',
     );
@@ -116,6 +119,7 @@ describe('AnalyzerComponent', () => {
 
   it('should call optimize and filter empty answers when submitting optimize answers', () => {
     const mockOptimizeResponse = {
+      id: 'optimization-uuid-123',
       previousScore: 73,
       newScore: 91,
       gain: 18,
@@ -125,8 +129,7 @@ describe('AnalyzerComponent', () => {
     mockService.optimize.and.returnValue(of(mockOptimizeResponse));
 
     fixture.detectChanges();
-    component.resumeContent = 'my resume';
-    component.jobDescription = 'my job';
+    component.analyzeResult = { id: 'analysis-uuid-123' } as any;
 
     const answers = [
       { tag: 'docker', question: 'Q1', answer: 'Yes' },
@@ -136,7 +139,7 @@ describe('AnalyzerComponent', () => {
 
     component.onAnswersSubmit(answers);
 
-    expect(mockService.optimize).toHaveBeenCalledWith('my resume', 'my job', [
+    expect(mockService.optimize).toHaveBeenCalledWith('analysis-uuid-123', [
       { tag: 'docker', question: 'Q1', answer: 'Yes' },
     ]);
     expect(component.optimizeResult).toEqual(mockOptimizeResponse);

@@ -74,7 +74,7 @@ export class AnalyzerComponent {
     this.errorMessage = null;
     this.jobDescription = jobDescription;
 
-    this.analyzerService.analyze(this.resumeContent, this.jobDescription).subscribe({
+    this.analyzerService.analyze(this.resumeId, this.resumeContent, this.jobDescription).subscribe({
       next: (res) => {
         this.analyzeResult = res;
         this.isLoading = false;
@@ -99,7 +99,7 @@ export class AnalyzerComponent {
     // Filter empty answers out before sending to the backend optimizer agent (as per CLAUDE.md lines 491-492)
     const filledAnswers = answers.filter(a => a.answer && a.answer.trim() !== '');
 
-    this.analyzerService.optimize(this.resumeContent, this.jobDescription, filledAnswers).subscribe({
+    this.analyzerService.optimize(this.analyzeResult?.id ?? '', filledAnswers).subscribe({
       next: (res) => {
         this.optimizeResult = res;
         this.isLoading = false;

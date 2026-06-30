@@ -8,6 +8,7 @@ export const ResumeResponseSchema = z.object({
 export type ResumeResponseDto = z.infer<typeof ResumeResponseSchema>;
 
 export const AnalyzeRequestSchema = z.object({
+  resumeId: z.string().uuid(),
   resumeContent: z.string().min(100),
   jobDescription: z.string().min(50),
 });
@@ -27,6 +28,7 @@ export const QuestionSchema = z.object({
 export type Question = z.infer<typeof QuestionSchema>;
 
 export const AnalyzeResponseSchema = z.object({
+  id: z.string().uuid(),
   score: z.number(),
   breakdown: z.object({
     keywordsScore: z.number(),
@@ -50,8 +52,7 @@ export const AnswerSchema = z.object({
 export type Answer = z.infer<typeof AnswerSchema>;
 
 export const OptimizeRequestSchema = z.object({
-  resumeContent: z.string(),
-  jobDescription: z.string(),
+  analysisId: z.string().uuid(),
   answers: z.array(AnswerSchema),
 });
 export type OptimizeRequestDto = z.infer<typeof OptimizeRequestSchema>;
@@ -63,6 +64,7 @@ export const ChangeSchema = z.object({
 export type Change = z.infer<typeof ChangeSchema>;
 
 export const OptimizeResponseSchema = z.object({
+  id: z.string().uuid(),
   previousScore: z.number(),
   newScore: z.number(),
   gain: z.number(),

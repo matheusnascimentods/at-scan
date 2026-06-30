@@ -43,6 +43,7 @@ describe('AnalyzerService', () => {
 
   it('should analyze resume', () => {
     const mockResponse = {
+      id: 'analysis-uuid-123',
       score: 75,
       breakdown: { keywordsScore: 80, semanticScore: 70, formatScore: 90, sectionScore: 60 },
       matchedKeywords: [],
@@ -53,6 +54,7 @@ describe('AnalyzerService', () => {
     };
 
     service.analyze(
+      'resume-uuid-123',
       'resume-content-min-100-characters-xyz-abc-def-ghi-jkl-mno-pqr-stu-vwx-yz-123-456-789-000',
       'job-description-min-50-characters-abc-def-ghi-jkl-mno'
     ).subscribe(res => {
@@ -61,11 +63,17 @@ describe('AnalyzerService', () => {
 
     const req = httpMock.expectOne(`${environment.apiUrl}/ats/analyze`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      resumeId: 'resume-uuid-123',
+      resumeContent: 'resume-content-min-100-characters-xyz-abc-def-ghi-jkl-mno-pqr-stu-vwx-yz-123-456-789-000',
+      jobDescription: 'job-description-min-50-characters-abc-def-ghi-jkl-mno'
+    });
     req.flush(mockResponse);
   });
 
   it('should optimize resume', () => {
     const mockResponse = {
+      id: 'optimization-uuid-123',
       previousScore: 75,
       newScore: 85,
       gain: 10,
@@ -73,12 +81,16 @@ describe('AnalyzerService', () => {
       changes: []
     };
 
-    service.optimize('original content', 'job description', []).subscribe(res => {
+    service.optimize('analysis-uuid-123', []).subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}/ats/optimize`);
     expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      analysisId: 'analysis-uuid-123',
+      answers: []
+    });
     req.flush(mockResponse);
   });
 });
